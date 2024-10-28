@@ -22,11 +22,11 @@
 // watch(() => obj.age, (newVal, oldVal) => {
 //   message.value = "Is Watching: " + oldVal + '-' + newVal+''
 // })
-import index from './views/Btap1/index.vue';
+import B1Template from './views/Btap1/B1Template.vue';
 </script>
 
 <template>
-  <index />
+  <B1Template />
 </template>
 
 <style scoped></style>

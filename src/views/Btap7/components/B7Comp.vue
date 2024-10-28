@@ -15,8 +15,9 @@ let checkPassword = computed(() => {
 function alertNofi() {
     alert('Form đã hoàn tất')
 }
+const isValidForm = (...form) => form.every(field => field.length >= 8);
 watch(() => form, () => {
-    if (form.fullName.length >= 8 && form.email.length >= 8 && form.password.length >= 8 && form.phone.length >= 8 && form.password == form.rePassword) {
+    if (isValidForm() && form.password == form.rePassword) {
         isFullfiled.value = true;
     } else {
         isFullfiled.value = false;

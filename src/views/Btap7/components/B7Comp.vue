@@ -26,7 +26,7 @@ watch(() => form, () => {
 <template>
     <div class="form-container">
         <h2>Registration Form</h2>
-        <form @submit.prevent="handleSubmit">
+        <form @submit.prevent>
             <div class="form-group">
                 <label for="fullName">Full Name</label>
                 <input type="text" id="fullName" v-model="form.fullName" required>

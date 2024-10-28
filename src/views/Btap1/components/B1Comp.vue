@@ -1,6 +1,6 @@
 <script setup>
 import { computed, reactive } from 'vue';
-import CurrencyFormatter from '../stores/CurrencyFormatter';
+import CurrencyFormatter from '../../../stores/CurrencyFormatter';
 const objRect = reactive({
     image: 'https://cdn.vjshop.vn/hightech/may-choi-game/ps5/sony-ps-5-1.jpg',
     imageAlt: 'ps5 alt',
@@ -43,7 +43,7 @@ const changeDescription = computed(() => {
 
 </script>
 <template>
-    <div class="container">
+   
         <h2>
             Tên Sản Phẩm:
             <span
@@ -60,14 +60,9 @@ const changeDescription = computed(() => {
         <img :src="objRect.image" alt="">
         <br>
         <button @click="changeInstock(objRect.inStock)">Change Name Color</button>
-    </div>
+    
 </template>
 <style scoped>
-.container{
-    margin: auto;
-    max-width: 700px;
-    text-align: center;
-}
 
 button{
     padding: 10px 30px;

@@ -43,7 +43,7 @@ const changeDescription = computed(() => {
 
 </script>
 <template>
-    <div>
+    <div class="container">
         <h2>
             Tên Sản Phẩm:
             <span
@@ -51,9 +51,11 @@ const changeDescription = computed(() => {
                 {{ objRect.product }}
             </span>
         </h2>
-        <h3>Current Price: <span :class="{ inStock: objRect.inStock }">{{ CurrencyFormatter(objRect.price) }}</span>
-        </h3>
-        <h3>Discounted Price: {{ CurrencyFormatter(discountPrice) }}</h3>
+        <div class="price">
+            <h3>Current Price: <span :class="{ inStock: objRect.inStock }">{{ CurrencyFormatter(objRect.price) }}</span>
+            </h3>
+            <h3>Discounted Price: {{ CurrencyFormatter(discountPrice) }}</h3>
+        </div>
         <p>{{ changeDescription }}</p>
         <img :src="objRect.image" alt="">
         <br>
@@ -61,6 +63,22 @@ const changeDescription = computed(() => {
     </div>
 </template>
 <style scoped>
+.container{
+    margin: auto;
+    max-width: 700px;
+    text-align: center;
+}
+
+button{
+    padding: 10px 30px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    background: green;
+    color: white;
+    font-size:20px
+}
+
 .bg-green {
     color: green;
 }
@@ -75,5 +93,10 @@ img {
 
 .inStock {
     color: green;
+}
+
+.price{
+    display: flex;
+    justify-content: space-between;
 }
 </style>

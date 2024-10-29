@@ -28,15 +28,12 @@
 <template>
   <div class="container">
     <nav>
-      <li><router-link :to="{ name: 'bai1' }">Bài 1</router-link></li>
-      <li><router-link :to="{ name: 'bai2' }">Bài 2</router-link></li>
-      <li><router-link :to="{ name: 'bai3' }">Bài 3</router-link></li>
-      <li><router-link :to="{ name: 'bai4' }">Bài 4</router-link></li>
-      <li><router-link :to="{ name: 'bai5' }">Bài 5</router-link></li>
-      <li><router-link :to="{ name: 'bai6' }">Bài 6</router-link></li>
-      <li><router-link :to="{ name: 'bai7' }">Bài 7</router-link></li>
+      <li><router-link :to="{ name: 'buoi2_1' }">Bài 1</router-link></li>
+      <li><router-link :to="{ name: 'buoi2_2' }">Bài 2</router-link></li>
+      <li><router-link :to="{ name: 'buoi2_3' }">Bài 3</router-link></li>
     </nav>
     <router-view></router-view>
+
   </div>
 
 </template>

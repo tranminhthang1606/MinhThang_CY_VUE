@@ -1,6 +1,6 @@
 <script setup>
 import { computed, reactive } from 'vue';
-import CurrencyFormatter from '../../../stores/CurrencyFormatter';
+import CurrencyFormatter from '@/stores/CurrencyFormatter';
 const objRect = reactive({
     image: 'https://cdn.vjshop.vn/hightech/may-choi-game/ps5/sony-ps-5-1.jpg',
     imageAlt: 'ps5 alt',
@@ -43,35 +43,34 @@ const changeDescription = computed(() => {
 
 </script>
 <template>
-   
-        <h2>
-            Tên Sản Phẩm:
-            <span
-                :class="objRect.inStock ? changeColor(objRect.classObject['bg-green']) : changeColor(objRect.classObject['bg-blue'])">
-                {{ objRect.product }}
-            </span>
-        </h2>
-        <div class="price">
-            <h3>Current Price: <span :class="{ inStock: objRect.inStock }">{{ CurrencyFormatter(objRect.price) }}</span>
-            </h3>
-            <h3>Discounted Price: {{ CurrencyFormatter(discountPrice) }}</h3>
-        </div>
-        <p>{{ changeDescription }}</p>
-        <img :src="objRect.image" alt="">
-        <br>
-        <button @click="changeInstock(objRect.inStock)">Change Name Color</button>
-    
+
+    <h2>
+        Tên Sản Phẩm:
+        <span
+            :class="objRect.inStock ? changeColor(objRect.classObject['bg-green']) : changeColor(objRect.classObject['bg-blue'])">
+            {{ objRect.product }}
+        </span>
+    </h2>
+    <div class="price">
+        <h3>Current Price: <span :class="{ inStock: objRect.inStock }">{{ CurrencyFormatter(objRect.price) }}</span>
+        </h3>
+        <h3>Discounted Price: {{ CurrencyFormatter(discountPrice) }}</h3>
+    </div>
+    <p>{{ changeDescription }}</p>
+    <img :src="objRect.image" alt="">
+    <br>
+    <button @click="changeInstock(objRect.inStock)">Change Name Color</button>
+
 </template>
 <style scoped>
-
-button{
+button {
     padding: 10px 30px;
     border-radius: 20px;
     border: none;
     outline: none;
     background: green;
     color: white;
-    font-size:20px
+    font-size: 20px
 }
 
 .bg-green {
@@ -90,7 +89,7 @@ img {
     color: green;
 }
 
-.price{
+.price {
     display: flex;
     justify-content: space-between;
 }

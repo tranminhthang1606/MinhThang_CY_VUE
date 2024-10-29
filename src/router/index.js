@@ -1,12 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import B1Template from '@/views/Btap1/B1Template.vue'
-import B2Template from '@/views/Btap2/B2Template.vue'
-import B3Template from '@/views/Btap3/B3Template.vue'
-import B4Template from '@/views/Btap4/B4Template.vue'
-import B5Template from '@/views/Btap5/B5Template.vue'
-import B6Template from '@/views/Btap6/B6Template.vue'
-import B7Template from '@/views/Btap7/B7Template.vue'
+import B1Template from '@/views/Buoi1/Btap1/B1Template.vue'
+import B2Template from '@/views/Buoi1/Btap2/B2Template.vue'
+import B3Template from '@/views/Buoi1/Btap3/B3Template.vue'
+import B4Template from '@/views/Buoi1/Btap4/B4Template.vue'
+import B5Template from '@/views/Buoi1/Btap5/B5Template.vue'
+import B6Template from '@/views/Buoi1/Btap6/B6Template.vue'
+import B7Template from '@/views/Buoi1/Btap7/B7Template.vue'
+import B21Temp from '@/views/Buoi2/Bai1/B21Temp.vue'
+import B22Temp from '@/views/Buoi2/Bai2/B22Temp.vue'
+import B23Temp from '@/views/Buoi2/Bai3/B23Temp.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -50,6 +53,21 @@ const router = createRouter({
       path: '/bai7',
       name: 'bai7',
       component: B7Template
+    },
+    {
+      path: '/buoi2_1',
+      name: 'buoi2_1',
+      component: B21Temp
+    },
+    {
+      path: '/buoi2_2',
+      name: 'buoi2_2',
+      component: B22Temp
+    },
+    {
+      path: '/buoi2_3',
+      name: 'buoi2_3',
+      component: B23Temp
     }
   ]
 })

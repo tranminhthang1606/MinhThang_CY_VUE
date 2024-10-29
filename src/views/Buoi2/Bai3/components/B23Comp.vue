@@ -60,6 +60,11 @@ function handleAddTodo(newToDo, expiredDate) {
         alert('Không được để trống !!');
         return;
     }
+
+    if (!expiredDate) {
+        alert('Hãy chọn ngày')
+        return;
+    }
     expiredDate = new Date(expiredDate);
     expiredDate = expiredDate.getTime();
     const newTodo = {
@@ -125,9 +130,9 @@ watch(() => today, () => {
 
         <div class="filter-options">
             <span @click="currentList = ''" class="filter active">All <span class="count">{{
-                    todoList.length}}</span></span>
-            <span @click="currentList = 'not_done'" class="filter">Chưa hoàn thành <span
-                    class="count">{{ notDoneJob.length }}</span></span>
+                todoList.length }}</span></span>
+            <span @click="currentList = 'not_done'" class="filter">Chưa hoàn thành <span class="count">{{
+                    notDoneJob.length }}</span></span>
             <span @click="currentList = 'success'" class="filter">Hoàn thành <span class="count">{{ successJob.length
                     }}</span></span>
             <span @click="currentList = 'error'" class="filter">Job lỗi <span class="count">{{ errorJob.length

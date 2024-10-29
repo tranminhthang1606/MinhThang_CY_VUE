@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, computed, watch } from 'vue';
+import { reactive, ref, computed, watch} from 'vue';
 
 const formatDate = (date) => {
     const today = new Date(date);
@@ -10,51 +10,35 @@ const formatDate = (date) => {
     const month = months[today.getMonth()];
     return dayOfWeek + ', ' + day + ' ' + month;
 }
-
-
-const todoList = reactive([
-    {
-        id: 1,
-        title: 'Task 1',
-        published: new Date(),
-        expiredDate: new Date(),
-        completed: false
-    },
-    {
-        id: 2,
-        title: 'Task 2',
-        published: new Date(),
-        expiredDate: new Date(),
-        completed: true
-    },
-    {
-        id: 3,
-        title: 'Task 3',
-        published: new Date(),
-        expiredDate: new Date(),
-        completed: false
-    },
-])
-
+const todo = ref('');
+const expiredDate = ref('');
+let addNewFlag = ref(false);
+let todoList = reactive(JSON.parse(localStorage.getItem('data')) ?? [])
+const currentList = ref('');
+let today = ref(new Date().getDay())
+watch(() => todoList, () => {
+    todoList = JSON.parse(localStorage.getItem('data')) ?? [];
+})
 function changeStatus(selected) {
     console.log(selected);
+    console.log(todoList);
 
     todoList.forEach(item => {
         if (item.id === selected) {
+            console.log(item);
             item.completed = !item.completed;
         }
     });
+    console.log(todoList);
+
+
+    localStorage.setItem('data', JSON.stringify(todoList));
 }
 
 
 function toggleFlag() {
     addNewFlag.value = !addNewFlag.value;
 }
-
-
-const todo = ref('');
-const expiredDate = ref('');
-let addNewFlag = ref(false);
 function handleAddTodo(newToDo, expiredDate) {
     if (newToDo == '') {
         alert('Không được để trống !!');
@@ -68,31 +52,30 @@ function handleAddTodo(newToDo, expiredDate) {
     expiredDate = new Date(expiredDate);
     expiredDate = expiredDate.getTime();
     const newTodo = {
-        id: Math.max(...todoList.map(item => item.id)) + 1,
+        id: (todoList.length > 0 ? Math.max(...todoList.map(item => item.id)) : 0) + 1,
         title: newToDo,
         published: Date.now(),
         expiredDate: expiredDate,
         completed: false,
     };
     todoList.push(newTodo);
+    localStorage.setItem('data', JSON.stringify(todoList));
     todo.value = '';
     addNewFlag.value = false;
 }
 
 const successJob = computed(() => {
-    return todoList.filter(item => (item.completed == true && item.expiredDate - item.published >= 0))
+    return todoList.length > 0 ? todoList.filter(item => (item.completed == true && item.expiredDate - item.published >= 0)) : []
 })
 
 const notDoneJob = computed(() => {
-    return todoList.filter(item => (item.completed == false && item.expiredDate - item.published >= 0))
+    return todoList.length > 0 ? todoList.filter(item => (item.completed == false && item.expiredDate - item.published >= 0)) : []
 })
 
 const errorJob = computed(() => {
-    return todoList.filter(item => (item.expiredDate - item.published < 0))
+    return todoList.length > 0 ? todoList.filter(item => (item.expiredDate - item.published < 0)) : []
 })
 
-const currentList = ref('');
-let today = ref(new Date().getDay())
 watch(() => today, () => {
     todoList.forEach(item => {
         if (item.completed == false && item.expiredDate - today.value < 0) {
@@ -100,6 +83,20 @@ watch(() => today, () => {
         }
     });
 })
+watch(() => todoList, () => {
+    todoList = reactive(JSON.parse(localStorage.getItem('data')) ?? [])
+}, {
+    deep: true
+})
+function deleteAllDoneJob() {
+    confirm('Bạn có chắc muốn xoá hết không?');
+    todoList.forEach((item) => {
+        if (item.completed == true) {
+            todoList.splice(todoList.indexOf(item), 1);
+        }
+    })
+    localStorage.setItem('data', JSON.stringify(todoList));
+}
 </script>
 <template>
     <div class="task-container">
@@ -114,6 +111,7 @@ watch(() => today, () => {
                 <h2>Today's Task</h2>
                 <p>{{ formatDate(Date.now()) }}</p>
             </div>
+            <button @click="deleteAllDoneJob()" class="delete-task-button">Delete All Done</button>
             <button @click="toggleFlag()" class="new-task-button">+ New Task</button>
         </div>
         <div v-show="addNewFlag" class="task-insert">
@@ -121,7 +119,9 @@ watch(() => today, () => {
                 <label for="todo">Todo</label>
                 <br>
                 <input type="text" id="todo" v-model="todo">
+                <br>
                 <label for="date">Deadline</label>
+                <br>
                 <input type="date" id="date" v-model="expiredDate">
                 <input type="submit" value="Thêm Todo">
             </form>
@@ -129,13 +129,19 @@ watch(() => today, () => {
 
 
         <div class="filter-options">
-            <span @click="currentList = ''" class="filter active">All <span class="count">{{
-                todoList.length }}</span></span>
-            <span @click="currentList = 'not_done'" class="filter">Chưa hoàn thành <span class="count">{{
+            <span @click="currentList = ''" :class="currentList == '' ? 'filter active' : 'filter'">All <span
+                    class="count">{{
+                        todoList.length }}</span></span>
+            <span @click="currentList = 'not_done'" :class="currentList == 'not_done' ? 'filter active' : 'filter'">Chưa
+                hoàn
+                thành <span class="count">{{
                     notDoneJob.length }}</span></span>
-            <span @click="currentList = 'success'" class="filter">Hoàn thành <span class="count">{{ successJob.length
+            <span @click="currentList = 'success'" :class="currentList == 'success' ? 'filter active' : 'filter'">Hoàn
+                thành
+                <span class="count">{{ successJob.length
                     }}</span></span>
-            <span @click="currentList = 'error'" class="filter">Job lỗi <span class="count">{{ errorJob.length
+            <span @click="currentList = 'error'" :class="currentList == 'error' ? 'filter active' : 'filter'">Job lỗi
+                <span class="count">{{ errorJob.length
                     }}</span></span>
         </div>
 
@@ -167,6 +173,9 @@ watch(() => today, () => {
                     <span v-show="item.completed == false" class="status_error">&#10007;</span>
                 </div>
             </div>
+            <div v-if="notDoneJob.length == 0">
+                <h3><i>Không còn gì để mất...</i></h3>
+            </div>
         </div>
 
         <div v-if="currentList == 'success'" class="task-list">
@@ -181,6 +190,10 @@ watch(() => today, () => {
                     <span v-show="item.completed == true" class="status_success">&#10003;</span>
                     <span v-show="item.completed == false" class="status_error">&#10007;</span>
                 </div>
+            </div>
+
+            <div v-if="successJob.length == 0">
+                <h3><i>Không còn gì để mất...</i></h3>
             </div>
         </div>
 
@@ -197,12 +210,16 @@ watch(() => today, () => {
                     <span v-show="item.completed == false" class="status_error">&#10007;</span>
                 </div>
             </div>
+
+            <div v-if="errorJob.length == 0">
+                <h3><i>Không còn gì để mất...</i></h3>
+            </div>
         </div>
     </div>
 </template>
 <style>
 .task-container {
-    width: 360px;
+    width: 100%;
     background-color: #ffffff;
     border-radius: 12px;
     padding: 16px;
@@ -256,6 +273,16 @@ watch(() => today, () => {
     padding: 8px 16px;
     background-color: #e6f0ff;
     color: #0066ff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.delete-task-button {
+    padding: 8px 16px;
+    background-color: red;
+    color: white;
     border: none;
     border-radius: 8px;
     font-size: 14px;

@@ -28,9 +28,7 @@
 <template>
   <div class="container">
     <nav>
-      <li><router-link :to="{ name: 'buoi2_1' }">Bài 1</router-link></li>
-      <li><router-link :to="{ name: 'buoi2_2' }">Bài 2</router-link></li>
-      <li><router-link :to="{ name: 'buoi2_3' }">Bài 3</router-link></li>
+      <li><router-link :to="{ name: 'buoi3' }">Buổi 3</router-link></li>
     </nav>
     <router-view></router-view>
 
@@ -41,8 +39,6 @@
 <style scoped>
 .container {
   margin: auto;
-  max-width: 700px;
-  text-align: center;
 }
 
 nav {

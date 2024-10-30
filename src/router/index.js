@@ -10,6 +10,8 @@ import B7Template from '@/views/Buoi1/Btap7/B7Template.vue'
 import B21Temp from '@/views/Buoi2/Bai1/B21Temp.vue'
 import B22Temp from '@/views/Buoi2/Bai2/B22Temp.vue'
 import B23Temp from '@/views/Buoi2/Bai3/B23Temp.vue'
+import B31Comp from '@/views/Buoi3/components/B31Comp.vue'
+import B3Temp from '@/views/Buoi3/B3Temp.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -68,6 +70,18 @@ const router = createRouter({
       path: '/buoi2_3',
       name: 'buoi2_3',
       component: B23Temp
+    },
+    {
+      path: '/buoi3',
+      name: 'buoi3',
+      component:B3Temp,
+      children: [
+        {
+          path: 'bai1',
+          name: 'buoi3_bai1',
+          component: B31Comp
+        }
+      ]
     }
   ]
 })

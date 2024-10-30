@@ -4,4 +4,4 @@ export default function CurrencyFormatter(value) {
       style: 'currency',
       currency: 'VND'
     }).format(value);
-  }
+}

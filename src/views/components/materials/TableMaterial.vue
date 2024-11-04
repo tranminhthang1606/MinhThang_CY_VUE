@@ -5,7 +5,7 @@ import { faEdit, faCheck } from '@fortawesome/free-solid-svg-icons';
 import CheckboxMaterial from '../materials/CheckboxMaterial.vue';
 import DateMaterial from './DateMaterial.vue';
 import TagComp from '../TagComp.vue';
-import { ref, watch, reactive,computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { toast } from 'vue3-toastify';
 const props = defineProps({
     currentTab: {
@@ -15,10 +15,24 @@ const props = defineProps({
 })
 
 let todoList = useTodoStore();
-let list = reactive(todoList.todoList);
+
+const list = computed(() => {
+    switch (props.currentTab) {
+        case 'all':
+            return todoList.todoList;
+        case 'today':
+            return todoList.todoList.filter(item => item.endDate === new Date().toISOString().split('T')[0]);
+        case 'upcoming':
+            return todoList.todoList.filter(item => item.endDate > new Date().toISOString());
+        case 'doneJob':
+            return todoList.todoList.filter(item => item.isCompleted);
+        default:
+            return todoList.todoList;
+    }
+})
 const checkAll = ref(false)
 function toggleCheckAll(status) {
-    list.forEach(item => {
+    list.value.forEach(item => {
         item.isChecked = status
     });
     checkAll.value = status;
@@ -42,17 +56,21 @@ function changeComplete(item) {
 }
 
 const currentPage = ref(1);
-const itemsPerPage = ref(5); 
-const totalPages = computed(() => Math.ceil(list.length / itemsPerPage.value));
+const itemsPerPage = ref(5);
 
-
+const totalPages = computed(() => Math.ceil(list.value.length / itemsPerPage.value));
 const paginatedTodos = computed(() => {
     const start = (currentPage.value - 1) * itemsPerPage.value;
     const end = start + itemsPerPage.value;
-    return list.slice(start, end);
+    return list.value.slice(start, end);
 });
 
-
+watch(() => [props.currentTab, todoList.openForm], () => {
+    currentPage.value = 1;
+    totalPages.value = computed(() => Math.ceil(list.value.length / itemsPerPage.value))
+}, {
+    deep: true, immediate: true
+})
 
 // Chuyển sang trang trước
 const prevPage = () => {
@@ -68,30 +86,6 @@ const nextPage = () => {
     }
 };
 
-
-watch(() => [props.currentTab, todoList.openForm, todoList.todoList], () => {
-    console.log('watch');
-    console.log(todoList.todoList);
-
-    switch (props.currentTab) {
-        case 'all':
-            list = todoList.todoList;
-            break;
-        case 'today':
-            list = todoList.todoList.filter(item => item.endDate === new Date().toISOString().split('T')[0]);
-            break;
-        case 'upcoming':
-            list = todoList.todoList.filter(item => item.endDate > new Date().toISOString());
-            break;
-        case 'doneJob':
-            list = todoList.todoList.filter(item => item.isCompleted);
-            break;
-        default:
-            break;
-    }
-}, {
-    deep: true, immediate: true
-})
 </script>
 
 <template>

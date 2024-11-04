@@ -30,13 +30,26 @@ const list = computed(() => {
             return todoList.todoList;
     }
 })
-const checkAll = ref(false)
+const currentPage = ref(1);
+const itemsPerPage = ref(5);
+
+const totalPages = computed(() => Math.ceil(list.value.length / itemsPerPage.value));
+const paginatedTodos = computed(() => {
+    const start = (currentPage.value - 1) * itemsPerPage.value;
+    const end = start + itemsPerPage.value;
+    return list.value.slice(start, end);
+});
+
+const checkAll = computed(()=>{
+    return paginatedTodos.value.every(item => item.isChecked);
+})
 function toggleCheckAll(status) {
     paginatedTodos.value.forEach(item => {
         item.isChecked = status
     });
     checkAll.value = status;
 }
+console.log(checkAll.value);
 
 function openEditForm(item) {
     todoList.openFormEdit(item);
@@ -54,16 +67,6 @@ function changeComplete(item) {
         autoClose: 3000
     });
 }
-
-const currentPage = ref(1);
-const itemsPerPage = ref(5);
-
-const totalPages = computed(() => Math.ceil(list.value.length / itemsPerPage.value));
-const paginatedTodos = computed(() => {
-    const start = (currentPage.value - 1) * itemsPerPage.value;
-    const end = start + itemsPerPage.value;
-    return list.value.slice(start, end);
-});
 
 watch(() => [props.currentTab, todoList.openForm], () => {
     currentPage.value = 1;

@@ -19,7 +19,7 @@ function handleCheck(item) {
         console.log(item);
         emit('toggleCheckAll', !props.checkAll);
     } else {
-        item.isChecked = !item.isChecked;
+        item.isChecked = !item.isChecked;        
         todoList.updateTodo(item);
     }
 }
@@ -29,7 +29,7 @@ function handleCheck(item) {
 <template>
     <div class="flex items-center space-x-3">
         <label class="form-checkbox h-5 w-5">
-            <input type="checkbox" :checked="item ? item.isChecked : false" @change="handleCheck(props.item)">
+            <input type="checkbox" :checked="item ? item.isChecked : checkAll" @change="handleCheck(props.item)">
             <span>
                 <span class="checked">
                     <font-awesome-icon class="text-green-500 cursor-pointer" :icon="faCheck" />

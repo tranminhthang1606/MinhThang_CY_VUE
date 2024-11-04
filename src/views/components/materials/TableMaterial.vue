@@ -32,7 +32,7 @@ const list = computed(() => {
 })
 const checkAll = ref(false)
 function toggleCheckAll(status) {
-    list.value.forEach(item => {
+    paginatedTodos.value.forEach(item => {
         item.isChecked = status
     });
     checkAll.value = status;
@@ -72,14 +72,12 @@ watch(() => [props.currentTab, todoList.openForm], () => {
     deep: true, immediate: true
 })
 
-// Chuyển sang trang trước
 const prevPage = () => {
     if (currentPage.value > 1) {
         currentPage.value--;
     }
 };
 
-// Chuyển sang trang sau
 const nextPage = () => {
     if (currentPage.value < totalPages.value) {
         currentPage.value++;
@@ -126,7 +124,7 @@ const nextPage = () => {
         </tbody>
     </table>
 
-    <div class="flex justify-center items-center space-x-4 mt-4">
+    <div v-if="totalPages>0" class="flex justify-center items-center space-x-4 mt-4">
         <button @click="prevPage" :disabled="currentPage === 1"
             class="px-4 py-2 bg-gray-300 text-gray-600 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-400">
             Trước

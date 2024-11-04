@@ -25,4 +25,7 @@ const props = defineProps({
     </select>
 </template>
 
-<style scoped></style>
+<style scoped>
+
+
+</style>

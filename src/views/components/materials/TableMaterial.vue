@@ -1,12 +1,10 @@
 <script setup>
 import { useTodoStore } from '@/stores/counter';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faEdit, faCheck } from '@fortawesome/free-solid-svg-icons';
 import CheckboxMaterial from '../materials/CheckboxMaterial.vue';
 import DateMaterial from './DateMaterial.vue';
 import TagComp from '../TagComp.vue';
 import { ref, computed, watch } from 'vue';
-import { toast } from 'vue3-toastify';
+
 const props = defineProps({
     currentTab: {
         type: String,
@@ -61,11 +59,6 @@ function openEditForm(item) {
 function changeComplete(item) {
     item.isCompleted = true;
     todoList.updateTodo(item);
-    toast('Đã cập nhập trạng thái của task', {
-        position: "top-center",
-        transition: "flip",
-        autoClose: 3000
-    });
 }
 
 watch(() => [props.currentTab, todoList.openForm], () => {
@@ -115,10 +108,8 @@ const nextPage = () => {
                     <DateMaterial :item="item" />
                 </td>
                 <td v-if="!item.isCompleted" class="py-3 px-6 text-center">
-                    <font-awesome-icon class="text-yellow-700 cursor-pointer" :icon="faEdit"
-                        @click="openEditForm(item)" /> |
-                    <font-awesome-icon @click="changeComplete(item)" class="text-green-600 cursor-pointer"
-                        :icon="faCheck" />
+                    <span class="text-yellow-700 cursor-pointer" @click="openEditForm(item)">Edit</span> |
+                    <span @click="changeComplete(item)" class="text-green-600 cursor-pointer">Check</span>
                 </td>
                 <td v-if="item.isCompleted" class="py-3 px-6 text-center">
                     Completed !

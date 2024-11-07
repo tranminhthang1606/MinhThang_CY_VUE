@@ -1,7 +1,5 @@
 <script setup>
 import { useTodoStore } from '@/stores/counter';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
 let todoList = useTodoStore();
 const props = defineProps({
     item: {
@@ -32,7 +30,7 @@ function handleCheck(item) {
             <input type="checkbox" :checked="item ? item.isChecked : checkAll" @change="handleCheck(props.item)">
             <span>
                 <span class="checked">
-                    <font-awesome-icon class="text-green-500 cursor-pointer" :icon="faCheck" />
+                    <span class="text-green-500 cursor-pointer">✔️</span>
                 </span>
             </span>
         </label>

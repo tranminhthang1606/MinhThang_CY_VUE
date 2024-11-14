@@ -1,8 +1,22 @@
 <template>
-    <div class="container mx-auto py-12 px-6">
+    <div class="container h-screen mx-auto py-12 px-6">
         <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">Giỏ Hàng Của Bạn</h1>
 
-        <h2 v-if="cart.length == 0" class="text-3xl font-bold text-red-800 mb-8 text-center">Giỏ hàng trống</h2>
+
+
+        <div v-if="cart.length == 0" class="text-center w-full p-10 bg-white shadow-lg rounded-lg">
+            <div class="empty-cart-icon mb-6">
+                🛒
+            </div>
+            <h2 class="text-2xl font-semibold text-gray-700 mb-2">Your Cart is Empty</h2>
+            <p class="text-gray-500 mb-6">Looks like you haven’t added any items to your cart yet.</p>
+
+            <NuxtLink class="px-5 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-500 transition duration-300"
+                :to="{ name: 'Products' }">
+                Go Shopping
+            </NuxtLink>
+        </div>
+
         <div v-if="cart.length > 0" class="bg-white rounded-lg shadow-md p-6">
             <div class="grid grid-cols-6 gap-4 font-semibold text-gray-600 border-b pb-4">
                 <p>Sản phẩm</p>
@@ -38,7 +52,6 @@
 
             <div class="mt-8 text-right">
                 <p class="text-lg font-bold text-gray-800 mb-8">Tổng cộng: {{ formatCurrency(totalPrice) }}</p>
-
                 <NuxtLink class="mt-4 bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700" :to="{
                     name: 'Checkout'
                 }">
@@ -53,29 +66,37 @@
 const config = useRuntimeConfig()
 const tokenCookie = useCookie('token')
 const cart = ref([]);
+
+
 onMounted(() => {
     cart.value = sessionStorage.getItem('cart') ? JSON.parse(sessionStorage.getItem('cart')) : []
 })
+
+
 const totalPrice = computed(() => {
     return cart.value.length > 0 ? cart.value.reduce((total, item) => total + (item.price * item.sl), 0) : 0
 })
 
 const checkStocksFunc = async (itemId) => {
-    console.log(itemId);
-
     let res = await checkStocks(config, tokenCookie.value, itemId)
     if (res.message == 'In stock') {
         sessionStorage.setItem('cart', JSON.stringify(cart.value));
+        return true;
     } else {
-        useNuxtApp().$toast('Sản phẩm đã hết hàng !!');
+        useNuxtApp().$toast.warning('Sản phẩm đã hết hàng !!');
         removeItem(itemId)
+        return false;
     }
 }
+
+
 const increaseQuantity = async (cartItem) => {
+    if (!checkStocksFunc(cartItem.id)) {
+        return;
+    }
+
     let itemData = await fetchDetailProduct(config, tokenCookie.value, cartItem.id);
     let productItem = itemData;
-    console.log(cart);
-    
     if (productItem.stock - 1 >= cartItem.sl) {
         cartItem.sl++;
         cartItem = { ...productItem, sl: cartItem.sl }
@@ -83,14 +104,20 @@ const increaseQuantity = async (cartItem) => {
         cart.value[index] = cartItem;
         sessionStorage.setItem('cart', JSON.stringify(cart.value));
     } else {
-        useNuxtApp().$toast('Đã tối đa số lượng tồn kho !!');
+        useNuxtApp().$toast.warning('Đã tối đa số lượng tồn kho !!');
+        cartItem = { ...productItem, sl: cartItem.sl }
+        let index = cart.value.findIndex(item => item.id === cartItem.id);
+        cart.value[index] = cartItem;
+        sessionStorage.setItem('cart', JSON.stringify(cart.value));
     }
-    console.log(cart);
-    
-    checkStocksFunc(cartItem.id)
 }
 
+
+
 const decreaseQuantity = async (cartItem) => {
+    if (!checkStocksFunc(cartItem.id)) {
+        return;
+    }
     let itemData = await fetchDetailProduct(config, tokenCookie.value, cartItem.id);
     let productItem = itemData;
     if (cartItem.sl > 1) {
@@ -100,19 +127,36 @@ const decreaseQuantity = async (cartItem) => {
         cart.value[index] = cartItem;
         sessionStorage.setItem('cart', JSON.stringify(cart.value));
     }
-    checkStocksFunc(cartItem.id)
+
 }
+
+
 
 const removeItem = (itemId) => {
     cart.value = cart.value.filter(item => item.id !== itemId);
-    useNuxtApp().$toast('Đã xoá sản phẩm khỏi giỏ hàng');
+    useNuxtApp().$toast.success('Đã xoá sản phẩm khỏi giỏ hàng');
     sessionStorage.setItem('cart', JSON.stringify(cart.value));
 }
 
-
-
-console.log(cart);
-
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.empty-cart-icon {
+    font-size: 3rem;
+    color: #9ca3af;
+    animation: bounce 1s infinite;
+    cursor: pointer;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+}
+</style>

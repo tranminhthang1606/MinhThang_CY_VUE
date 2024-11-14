@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import 'vue3-toastify/dist/index.css';
 export const useUserStore = defineStore('userStore', () => {
-
     const isLoggedIn = ref(useCookie('token') ? true : false);
     const orderStatus = {
         'Pending': 'green-500',

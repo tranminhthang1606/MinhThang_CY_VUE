@@ -6,17 +6,6 @@
                 <img src="https://via.placeholder.com/150" alt="Profile Picture" class="w-32 h-32 rounded-full mb-4">
                 <h1 class="text-2xl font-bold text-gray-800">{{ name }}</h1>
                 <p class="text-gray-600 mb-6">Software Developer at XYZ Company</p>
-
-                <!-- Action Buttons -->
-                <div class="flex space-x-4 mb-8">
-                    <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Chỉnh sửa hồ
-                        sơ</button>
-                    <button class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Xem thông tin cá
-                        nhân</button>
-                    <button class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700">Cài đặt bảo
-                        mật</button>
-                    <button class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">Đăng xuất</button>
-                </div>
             </div>
 
             <!-- Profile Details -->

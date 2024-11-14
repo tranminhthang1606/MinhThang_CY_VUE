@@ -26,12 +26,13 @@
                 <label for="category" class="block text-lg font-semibold text-gray-800 mb-2">Chọn danh mục:</label>
                 <div class="flex items-center gap-3">
                     <select id="category" v-model="querySearch.category_slug"
-                        class="block w-full px-6 py-3 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 sm:text-sm transition duration-200 ease-in-out">
+                        class="block w-4/5 px-6 py-3 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 sm:text-sm transition duration-200 ease-in-out">
                         <option disabled selected value="">Chọn một danh mục</option>
                         <option v-for="item in categories" :value="item.slug">{{ item.name }}</option>
                     </select>
                     <button @click="clearFilter"
-                        class=" bg-purple-600 px-6 py-3 text-white rounded-xl hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-200 ease-in-out">Clear</button>
+                        class=" bg-purple-600 w-1/5 px-6 py-3 text-white rounded-xl hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-200 ease-in-out">Xoá
+                        Lọc</button>
                 </div>
             </div>
         </div>
@@ -45,10 +46,10 @@
                 </NuxtLink>
                 <div class="p-6">
                     <NuxtLink :to="{ name: 'ProductDetail', params: { id: item.id } }">
-                        <h2 class="text-2xl font-semibold text-gray-800 mb-2">{{ item.name }}</h2>
+                        <h2 class="text-2xl font-semibold text-gray-800 mb-2 line-clamp-2">{{ item.name }}</h2>
                     </NuxtLink>
 
-                    <p class="text-gray-600 text-sm mb-4">{{ item.description }}</p>
+                    <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ item.description }}</p>
                     <div class="flex justify-between text-gray-700 mb-4">
                         <span class="font-bold text-lg text-purple-600">{{ formatCurrency(item.price) }}</span>
                         <span class="font-bold text-lg text-purple-600">{{ item.stock }} sản phẩm</span>
@@ -72,16 +73,21 @@
 <script setup>
 import debounce from 'lodash.debounce';
 const config = useRuntimeConfig()
-const currentPage = ref(1);
+const currentPage = ref(useRoute().query.page ? useRoute().query.page : '');
 const token = useCookie('token');
 const isLoading = ref(false);
+
+definePageMeta({
+    middleware: 'get-params'
+})
 let cartItem;
 const querySearch = reactive({
-    name: '',
-    category_id: 0,
-    min_price: 0,
-    max_price: 0,
-    category_slug: ''
+    name: useRoute().query.name ? useRoute().query.name : '',
+    category_id: useRoute().query.category_id ? useRoute().query.category_id : 0,
+    min_price: useRoute().query.min_price ? useRoute().query.min_price : 0,
+    max_price: useRoute().query.max_price ? useRoute().query.max_price : 0,
+    category_slug: useRoute().query.category_slug ? useRoute().query.category_slug : '',
+    page: currentPage.value
 })
 
 const { data: serverCategories } = await useAsyncData('fetchCategories', async () => {
@@ -91,13 +97,16 @@ const { data: serverCategories } = await useAsyncData('fetchCategories', async (
 
 const categories = ref(serverCategories.value.data)
 
-let { data: serverData } = await useAsyncData('fetchProducts', async () => {
-    let res = await fetchProduct(config, token.value, {})
+let { data: serverData, refresh } = await useAsyncData('fetchProducts', async () => {
+    let res = await fetchProduct(config, token.value, querySearch)
     return res
 })
-
 const maxPage = ref(serverData.value.last_page)
 const products = ref(serverData.value.data);
+watch(querySearch, () => {
+    refresh();
+});
+
 
 const handleScroll = async () => {
     if (currentPage.value == maxPage.value) {
@@ -109,6 +118,10 @@ const handleScroll = async () => {
         let res = await fetchProduct(config, token.value, { ...querySearch, page: currentPage.value })
         products.value = products.value.concat(res.data)
         isLoading.value = false
+        const filteredParams = Object.fromEntries(
+            Object.entries(querySearch).filter(([key, value]) => value !== 0 && value !== "")
+        );
+        useRouter().push({ query: { ...filteredParams, page: currentPage.value } })
     }
     console.log('scroll');
 
@@ -133,6 +146,10 @@ onUnmounted(() => {
 
 const debouncedUpdateProducts = debounce(async () => {
     const newData = await fetchProduct(config, token.value, querySearch);
+    const filteredParams = Object.fromEntries(
+        Object.entries(querySearch).filter(([key, value]) => value !== 0 && value !== "")
+    );
+    useRouter().push({ query: { ...filteredParams, page: currentPage.value } })
     products.value = newData.data;
 }, 500);
 

@@ -1,53 +1,54 @@
 <template>
-    <div
-        class="w-4/5 mx-auto mt-12 max-w-md bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 text-white rounded-lg shadow-xl p-8">
-        <h2 class="text-3xl font-bold text-center">Đăng Nhập</h2>
-        <form class="mt-8 space-y-6" @submit.prevent="handleLogin">
-
-            <div>
-                <label for="email" class="block text-sm font-semibold mb-1">Email</label>
-                <div class="relative">
-                    <input type="email" id="email" v-model="email"
-                        class="w-full mt-2 px-4 py-2 pl-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-800 placeholder-gray-400"
-                        placeholder="you@example.com" required>
-                    <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500"
-                        fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 1L3 8h3v7h6V8h3z"></path>
-                    </svg>
+    <div class="h-screen max-w-md mx-auto">
+        <div
+            class="mt-12 w-full bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 text-white rounded-lg shadow-xl p-8">
+            <h2 class="text-3xl font-bold text-center">Đăng Nhập</h2>
+            <form class="mt-8 space-y-6" @submit.prevent="handleLogin">
+                <div>
+                    <label for="email" class="block text-sm font-semibold mb-1">Email</label>
+                    <div class="relative">
+                        <input type="email" id="email" v-model="email"
+                            class="w-full mt-2 px-4 py-2 pl-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-800 placeholder-gray-400"
+                            placeholder="you@example.com" required>
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500"
+                            fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 1L3 8h3v7h6V8h3z"></path>
+                        </svg>
+                    </div>
                 </div>
-            </div>
 
 
-            <div>
-                <label for="password" class="block text-sm font-semibold mb-1">Mật Khẩu</label>
-                <div class="relative">
-                    <input type="password" id="password" v-model="password"
-                        class="w-full mt-2 px-4 py-2 pl-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-800 placeholder-gray-400"
-                        placeholder="••••••••" required>
-                    <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500"
-                        fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                            d="M12 1C8.69 1 5.8 2.58 4.24 5.14L2.69 3.59C1.09 5.93 0 8.68 0 12s1.09 6.07 2.69 8.41l1.55-1.55C5.8 21.42 8.69 23 12 23c3.31 0 6.2-1.58 7.76-4.14l1.55 1.55C22.91 18.07 24 15.32 24 12s-1.09-6.07-2.69-8.41L19.76 5.14C18.2 2.58 15.31 1 12 1z">
-                        </path>
-                    </svg>
+                <div>
+                    <label for="password" class="block text-sm font-semibold mb-1">Mật Khẩu</label>
+                    <div class="relative">
+                        <input type="password" id="password" v-model="password"
+                            class="w-full mt-2 px-4 py-2 pl-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-800 placeholder-gray-400"
+                            placeholder="••••••••" required>
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500"
+                            fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 1C8.69 1 5.8 2.58 4.24 5.14L2.69 3.59C1.09 5.93 0 8.68 0 12s1.09 6.07 2.69 8.41l1.55-1.55C5.8 21.42 8.69 23 12 23c3.31 0 6.2-1.58 7.76-4.14l1.55 1.55C22.91 18.07 24 15.32 24 12s-1.09-6.07-2.69-8.41L19.76 5.14C18.2 2.58 15.31 1 12 1z">
+                            </path>
+                        </svg>
+                    </div>
                 </div>
-            </div>
 
 
-            <div>
-                <button type="submit"
-                    class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out transform hover:scale-105">Đăng
-                    Nhập</button>
-            </div>
+                <div>
+                    <button type="submit"
+                        class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out transform hover:scale-105">Đăng
+                        Nhập</button>
+                </div>
 
 
-            <p class="text-center text-sm mt-4">
-                Chưa có tài khoản? <NuxtLink class="font-semibold text-blue-200 hover:text-white"
-                    :to="{ name: 'Signup' }">
-                    Đăng Ký
-                </NuxtLink>
-            </p>
-        </form>
+                <p class="text-center text-sm mt-4">
+                    Chưa có tài khoản? <NuxtLink class="font-semibold text-blue-200 hover:text-white"
+                        :to="{ name: 'Signup' }">
+                        Đăng Ký
+                    </NuxtLink>
+                </p>
+            </form>
+        </div>
     </div>
 </template>
 
@@ -66,12 +67,14 @@ const handleLogin = async () => {
             tokenCookie.value = res.data.value.token
             userCookie.value = JSON.stringify({ name: res.data.value.user.name, email: res.data.value.user.email })
             userStoreRef.login();
-            navigateTo('/', useNuxtApp().$toast('Đăng nhập thành công !!'))
+            navigateTo('/').then(() => {
+                useNuxtApp().$toast.success('Đăng nhập thành công !!')
+            })
 
         }
     } catch (error) {
 
-        navigateTo('/login', useNuxtApp().$toast('Đã xảy ra lỗi trong quá trình đăng nhập'))
+        navigateTo('/login', useNuxtApp().$toast.error('Đã xảy ra lỗi trong quá trình đăng nhập'))
     }
 }
 

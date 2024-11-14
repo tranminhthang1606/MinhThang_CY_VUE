@@ -75,16 +75,20 @@ const order = reactive({
 })
 
 const handleOrder = async () => {
-    console.log(order);
+    order.cart_item.forEach(async (item) => {
+        let res = await fetchProduct(config, token.value, { name: item.name });
+        if (item.quantity > res.data[0].stock) {
+            useNuxtApp().$toast.error('Sản Phẩm ' + item.name + ' không đủ hàng, tồn: ' + res.data[0].stock);
+        }
+    });
     try {
-        let res = await sendOrder(config, token.value, order)
-        console.log(res);
-        useNuxtApp().$toast('Tạo Order Thành Công');
+        await sendOrder(config, token.value, order)
         sessionStorage.removeItem('cart');
-        navigateTo('/')
+        navigateTo('/').then(() => {
+            useNuxtApp().$toast.success('Tạo Order Thành Công');
+        })
     } catch (error) {
-        console.log(error);
-        useNuxtApp().$toast('Tạo Order Không Thành Công');
+        useNuxtApp().$toast.error('Tạo Order Không Thành Công');
     }
 }
 

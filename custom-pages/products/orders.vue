@@ -1,5 +1,5 @@
 <template>
-    <div class="container mx-auto py-12 px-6">
+    <div class="container h-screen mx-auto py-12 px-6">
         <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">Đơn Hàng Của Bạn</h1>
 
 
@@ -22,6 +22,9 @@
                 <p class="text-gray-800 font-semibold">{{ formatCurrency(item.total) }}</p>
                 <button @click="togglePopup(true, item)"
                     class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Xem chi tiết</button>
+            </div>
+            <div v-if="orders.length == 0" class="grid grid-cols-5 gap-4 items-center py-4 border-b">
+                <h2>Bạn chưa có đơn hàng nào</h2>
             </div>
         </div>
     </div>

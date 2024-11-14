@@ -1,23 +1,23 @@
 <template>
-    <nav class="bg-white shadow-md">
-        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
-            <NuxtLink class="font-bold text-xl text-blue-600" :to="{
-                name: 'Home'
-            }">
+    <nav class="bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 shadow-lg">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <NuxtLink class="font-bold text-2xl text-white tracking-wide hover:text-yellow-300 transition duration-200"
+                :to="{ name: 'Home' }">
                 YourLogo
             </NuxtLink>
+
             <div v-show="tokenCookie" class="user-menu hidden md:flex items-center space-x-6 relative">
                 <h2
-                    class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 drop-shadow-lg p-2 rounded-lg">
+                    class="text-lg font-bold text-white bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent drop-shadow-lg p-2 rounded-lg">
                     Hello: {{ name }}
                 </h2>
-                <NuxtLink class="block px-4 py-2 text-gray-700 hover:bg-blue-100" :to="{ name: 'Products' }">
+                <NuxtLink class="text-white hover:text-yellow-300 transition duration-200" :to="{ name: 'Products' }">
                     Sản Phẩm
                 </NuxtLink>
                 <div class="dropdown relative">
-                    <button class="text-gray-700 hover:text-blue-600">Menu</button>
+                    <button class="text-white hover:text-yellow-300 transition duration-200">Menu</button>
                     <div
-                        class="dropdown-menu absolute right-0 w-48 bg-white border border-gray-300 rounded-lg shadow-lg z-10 hidden group-hover:block">
+                        class="dropdown-menu absolute right-0 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-20 hidden group-hover:block">
                         <NuxtLink class="block px-4 py-2 text-gray-700 hover:bg-blue-100" :to="{ name: 'Profile' }">
                             Profile
                         </NuxtLink>
@@ -34,20 +34,17 @@
                     </div>
                 </div>
             </div>
-            <div v-show="!tokenCookie" class="hidden md:flex space-x-6">
 
-                <NuxtLink class="text-gray-700 hover:text-blue-600" :to="{
-                    name: 'Login'
-                }">
+            <div v-show="!tokenCookie" class="hidden md:flex space-x-6">
+                <NuxtLink class="text-white hover:text-yellow-300 transition duration-200" :to="{ name: 'Login' }">
                     Login
                 </NuxtLink>
-                <NuxtLink class="text-gray-700 hover:text-blue-600" :to="{
-                    name: 'Signup'
-                }">
+                <NuxtLink class="text-white hover:text-yellow-300 transition duration-200" :to="{ name: 'Signup' }">
                     Register
                 </NuxtLink>
             </div>
-            <button class="md:hidden text-gray-700 focus:outline-none">
+
+            <button class="md:hidden text-white focus:outline-none">
                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
@@ -55,25 +52,41 @@
         </div>
     </nav>
     <slot></slot>
-    <footer class="bg-blue-600 text-white fixed bottom-0 py-6 w-full">
+    <footer class="bg-blue-900 text-white py-6 relative bottom-0 w-full">
         <div class="container mx-auto px-6 text-center">
-            <p class="text-sm">&copy; 2024 Your Company. All rights reserved.</p>
+            <p class="text-sm">
+                &copy; 2024 <span class="font-bold">Your Company</span>. All rights reserved.
+                <br>
+                <a href="#" class="text-yellow-300 hover:text-yellow-400 transition duration-200">Privacy Policy</a> |
+                <a href="#" class="text-yellow-300 hover:text-yellow-400 transition duration-200">Terms of Service</a>
+            </p>
         </div>
     </footer>
+
+    <NuxtLink v-if="tokenCookie" class="empty-cart-icon mb-6 fixed right-4 bottom-4" :to="{ name: 'Cart' }">
+        🛒
+    </NuxtLink>
 </template>
 
 <script setup>
 const tokenCookie = useCookie('token');
 const userCookie = useCookie('user');
+const config = useRuntimeConfig();
 const name = ref(userCookie.value ? userCookie.value.name : '');
 watch(() => userCookie.value, () => {
     name.value = userCookie.value.name
 })
 
-function handleLogout() {
-    tokenCookie.value = null;
-    userCookie.value = null;
-    window.location.reload();
+const handleLogout = async () => {
+    let res = await callLogout(config, tokenCookie.value);
+    console.log(res);
+
+    if (res.message == 'Successfully logged out') {
+        tokenCookie.value = null;
+        userCookie.value = null;
+        sessionStorage.clear();
+        window.location.reload();
+    }
 }
 </script>
 
@@ -98,5 +111,24 @@ function handleLogout() {
 .dropdown-menu a:hover,
 .dropdown-menu button:hover {
     background-color: #BFDBFE;
+}
+
+.empty-cart-icon {
+    font-size: 3rem;
+    color: #9ca3af;
+    animation: bounce 1s infinite;
+    cursor: pointer;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
 }
 </style>
